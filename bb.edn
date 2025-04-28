@@ -1,7 +1,7 @@
 {:paths ["src"]
  :deps {wanishing/databricks-connect-installer {:local/root "."}}
  :min-bb-version "1.3.186"
- :bbin/bin {databricks-connect-installer {:main-opts ["-f" "databricks-connect-installer"]}}
+ :bbin/bin {databricks-connect-installer {:main-opts ["-m" "wanishing.databricks-connect-installer.core/-main"]}}
  :tasks
  {:requires ([babashka.fs :as fs]
              [clojure.string :as str])
