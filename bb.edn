@@ -1,0 +1,24 @@
+{:paths ["src"]
+ :deps {wanishing/databricks-connect-installer {:local/root "."}}
+ :min-bb-version "1.3.186"
+ :bbin/bin {databricks-connect-installer {:main-opts ["-f" "databricks-connect-installer"]}}
+ :tasks
+ {:requires ([babashka.fs :as fs]
+             [clojure.string :as str])
+
+  lint {:doc "Run cljstyle & clj-kondo"
+        :task
+        (do
+          (shell "cljstyle fix --report src")
+          (shell "clj-kondo --lint src"))}
+
+  dev-install {:doc "Install locally for dev"
+               :task 
+               (shell "bbin install . --as dbx-dev --main-opts \"[\\\"-m\\\" \\\"wanishing.databricks-connect-installer.core/-main\\\"]\"")}
+
+  run-cmd {:doc "Run wit with arguments (usage: bb run-cmd -- [args])"
+           :task (shell (str "bb -cp src -m wanishing.databricks-connect-installer.core " (str/join " " *command-line-args*)))}
+
+  run-main {:doc "Run main"
+            :task (let [cmd]
+                    (apply clojure "-M -m wanishing.databricks-connect-installer" *command-line-args*))}}}

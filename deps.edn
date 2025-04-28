@@ -1,0 +1,12 @@
+{:paths ["src"]
+ :deps  {babashka/babashka.process {:git/url "https://github.com/babashka/babashka.process"
+                                    :git/sha "2058c79fb63f80ca71917432eddea73e0c58717c"}
+         babashka/fs {:mvn/version "0.5.24"}
+         babashka/babashka.curl {:mvn/version "0.1.2"}
+         cheshire/cheshire {:mvn/version "5.13.0"}
+         org.babashka/cli {:mvn/version "0.8.62"}}
+ :aliases
+ {:cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.52.0"}}
+              :main-opts  ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]"]}
+
+  :neil {:project {:name databricks-connect-installer/databricks-connect-installer}}}}
