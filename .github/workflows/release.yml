@@ -30,7 +30,7 @@ jobs:
       - name: Get Version
         id: version
         run: |
-          VERSION=$(bb -e "(require '[clojure.edn :as edn]) (-> (edn/read-string (slurp \"deps.edn\")) :aliases :databricks-connect-installer :project :version)")
+          VERSION=$(bb -e "(require '[clojure.edn :as edn]) (-> (edn/read-string (slurp \"deps.edn\")) :aliases :databricks-connect-installer :project :version)" | tr -d '"')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Extracted version: $VERSION"
 
