@@ -39,6 +39,9 @@
                                   :databricks-connect-installer
                                   :project
                                   :version)]
+                    (when (shell {:continue true :out nil} (str "git tag -l v" version))
+                      (shell {:continue true} (str "git tag -d v" version))
+                      (shell {:continue true} (str "git push origin :refs/tags/v" version)))
                     (shell {:continue true} (format "git commit -m 'Release version %s'" version))
                     (shell {:continue true} (str "git tag v" version))
-                    (shell "git push --atomic origin main" (str "v" version))))}}}
+                    (shell "git push --atomic origin initial-1" (str "v" version))))}}}
