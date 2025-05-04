@@ -3,10 +3,17 @@
     [babashka.cli :as cli]
     [wanishing.databricks-connect-installer.commands.connect :refer [connect-runtime]]
     [wanishing.databricks-connect-installer.commands.setup :refer [setup-env]]
-    [wanishing.databricks-connect-installer.utils.ui :refer [display-help]]))
+    [wanishing.databricks-connect-installer.utils.ui :refer [display-help]]
+    [clojure.edn :as edn]))
 
 
-(def version "1.0.0")
+(def version 
+  (-> (slurp "deps.edn")
+      edn/read-string
+      :aliases
+      :databricks-connect-installer
+      :project
+      :version))
 
 
 (def commands
