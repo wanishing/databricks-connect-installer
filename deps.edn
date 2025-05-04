@@ -1,12 +1,20 @@
-{:paths ["src"]
+{:paths ["src" "resources"]
  :deps  {babashka/babashka.process {:git/url "https://github.com/babashka/babashka.process"
                                     :git/sha "2058c79fb63f80ca71917432eddea73e0c58717c"}
          babashka/fs {:mvn/version "0.5.24"}
          babashka/babashka.curl {:mvn/version "0.1.2"}
          cheshire/cheshire {:mvn/version "5.13.0"}
-         org.babashka/cli {:mvn/version "0.8.62"}}
+         org.babashka/cli {:mvn/version "0.8.62"}
+         org.clojure/clojure {:mvn/version "1.11.1"}}
  :aliases
- {:cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.52.0"}}
+ {:databricks-connect-installer {:project {:version "0.1.0-SNAPSHOT"}}
+  :cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.52.0"}}
               :main-opts  ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]"]}
 
-  :neil {:project {:name databricks-connect-installer/databricks-connect-installer}}}}
+  :neil {:project {:name databricks-connect-installer/databricks-connect-installer}}
+
+  :build {:deps {io.github.clojure/tools.build {:git/tag "v0.9.6" :git/sha "8e78bcc"}}
+          :ns-default build}
+  
+  :uberjar {:replace-deps {io.github.clojure/tools.build {:git/tag "v0.9.6" :git/sha "8e78bcc"}}
+            :exec-fn build/uber}}}

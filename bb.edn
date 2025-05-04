@@ -11,7 +11,7 @@
         (do
           (shell "cljstyle fix --report src")
           (shell "clj-kondo --lint src"))}
-
+  
   dev-install {:doc "Install locally for dev"
                :task 
                (shell "bbin install . --as dbx-dev --main-opts \"[\\\"-m\\\" \\\"wanishing.databricks-connect-installer.core/-main\\\"]\"")}
@@ -21,4 +21,9 @@
 
   run-main {:doc "Run main"
             :task (let [cmd]
-                    (apply clojure "-M -m wanishing.databricks-connect-installer" *command-line-args*))}}}
+                    (apply clojure "-M -m wanishing.databricks-connect-installer" *command-line-args*))}
+
+  uberjar {:doc "Build uberjar"
+           :task (do
+                  (println "Making uberjar")
+                  (clojure "-T:build uber"))}}}
