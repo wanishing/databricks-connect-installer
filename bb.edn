@@ -1,12 +1,10 @@
 {:paths ["src"]
- :deps {wanishing/databricks-connect-installer {:local/root "."}
-        io.github.clojure/tools.build {:git/tag "v0.9.6" :git/sha "8e78bcc"}}
+ :deps {wanishing/databricks-connect-installer {:local/root "."}}
  :min-bb-version "1.3.186"
  :bbin/bin {databricks-connect-installer {:main-opts ["-m" "wanishing.databricks-connect-installer.core/-main"]}}
  :tasks
  {:requires ([babashka.fs :as fs]
-             [clojure.string :as str]
-             [clojure.edn :as edn])
+             [clojure.string :as str])
 
   lint {:doc "Run cljstyle & clj-kondo"
         :task
@@ -28,17 +26,4 @@
   uberjar {:doc "Build uberjar"
            :task (do
                   (println "Making uberjar")
-                  (clojure "-T:build uber"))}
-
-  publish {:doc "Push version tag to trigger release workflow"
-           :task (do
-                  (shell {:continue true} "git add .")
-                  (let [version (-> (slurp "deps.edn")
-                                  edn/read-string
-                                  :aliases
-                                  :databricks-connect-installer
-                                  :project
-                                  :version)]
-                    (shell {:continue true} (format "git commit -m 'Release version %s'" version))
-                    (shell {:continue true} (str "git tag v" version))
-                    (shell "git push --atomic origin initial-1" (str "v" version))))}}}
+                  (clojure "-T:build uber"))}}}
