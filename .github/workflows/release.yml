@@ -31,14 +31,18 @@ jobs:
         id: version
         run: |
           VERSION=$(bb -e "(require '[clojure.edn :as edn]) (-> (edn/read-string (slurp \"deps.edn\")) :aliases :databricks-connect-installer :project :version)")
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
 
       - name: Build uberjar
         run: |
           bb uberjar
+          ls -la target/
 
       - name: Create binary
         run: |
+          echo "Creating binary for version: $VERSION"
+          ls -la target/
           cat $(which bb) target/databricks-connect-installer-${VERSION}-standalone.jar > databricks-connect-installer
           chmod +x databricks-connect-installer
         env:
