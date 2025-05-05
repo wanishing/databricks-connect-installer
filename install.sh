@@ -33,8 +33,6 @@ esac
 
 # Get the latest release version
 echo "${BLUE}📦 Fetching latest release...${NC}"
-echo "${BLUE}Checking GitHub API response:${NC}"
-curl -v "https://api.github.com/repos/${GITHUB_REPO}/releases/latest"
 LATEST_RELEASE=$(curl -s "https://api.github.com/repos/${GITHUB_REPO}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
 
 if [ -z "$LATEST_RELEASE" ]; then
@@ -42,11 +40,13 @@ if [ -z "$LATEST_RELEASE" ]; then
     exit 1
 fi
 
-VERSION=${LATEST_RELEASE#v}  # Remove 'v' prefix if present
+# Keep the v prefix in VERSION since that's how it appears in the asset name
+VERSION=${LATEST_RELEASE}
 echo "${BLUE}📥 Downloading version ${VERSION}...${NC}"
 
-# Create download URL
-DOWNLOAD_URL="https://github.com/${GITHUB_REPO}/releases/download/${LATEST_RELEASE}/${BINARY_NAME}-${VERSION}-${OS}-latest.zip"
+# Create download URL - use exact asset name format
+BINARY_FILENAME="${BINARY_NAME}-${VERSION#v}-${OS}-latest.zip"
+DOWNLOAD_URL="https://github.com/${GITHUB_REPO}/releases/download/${LATEST_RELEASE}/${BINARY_FILENAME}"
 echo "${BLUE}Downloading from: ${DOWNLOAD_URL}${NC}"
 
 # Create temporary directory
@@ -55,19 +55,14 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 
 # Download and extract
 echo "${BLUE}Downloading installer...${NC}"
-echo "${BLUE}Temporary directory: ${TMP_DIR}${NC}"
-curl -v -L "$DOWNLOAD_URL" -o "$TMP_DIR/installer.zip"
-echo "${BLUE}Download complete. File size:${NC}"
-ls -lh "$TMP_DIR/installer.zip"
-
-if ! curl -L --fail --progress-bar "$DOWNLOAD_URL" -o "$TMP_DIR/installer.zip"; then
+if ! curl -L --fail --progress-bar --output "$TMP_DIR/${BINARY_FILENAME}" "$DOWNLOAD_URL"; then
     echo "${RED}Error: Failed to download installer${NC}"
     echo "${RED}URL: ${DOWNLOAD_URL}${NC}"
     exit 1
 fi
 
 echo "${BLUE}Extracting installer...${NC}"
-if ! unzip -q "$TMP_DIR/installer.zip" -d "$TMP_DIR"; then
+if ! unzip -q "$TMP_DIR/${BINARY_FILENAME}" -d "$TMP_DIR"; then
     echo "${RED}Error: Failed to extract installer${NC}"
     exit 1
 fi
