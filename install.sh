@@ -40,16 +40,18 @@ if [ -z "$LATEST_RELEASE" ]; then
     exit 1
 fi
 
-echo "${BLUE}📥 Downloading version ${LATEST_RELEASE}...${NC}"
+VERSION=${LATEST_RELEASE#v}  # Remove 'v' prefix if present
+echo "${BLUE}📥 Downloading version ${VERSION}...${NC}"
 
 # Create download URL
-DOWNLOAD_URL="https://github.com/${GITHUB_REPO}/releases/download/${LATEST_RELEASE}/databricks-connect-installer-${LATEST_RELEASE}-${OS}-latest.zip"
+DOWNLOAD_URL="https://github.com/${GITHUB_REPO}/releases/download/${LATEST_RELEASE}/${BINARY_NAME}-${VERSION}-${OS}-latest.zip"
 
 # Create temporary directory
 TMP_DIR=$(mktemp -d)
 trap 'rm -rf "$TMP_DIR"' EXIT
 
 # Download and extract
+echo "${BLUE}Downloading from: ${DOWNLOAD_URL}${NC}"
 curl -L "$DOWNLOAD_URL" -o "$TMP_DIR/installer.zip"
 unzip -q "$TMP_DIR/installer.zip" -d "$TMP_DIR"
 
@@ -57,13 +59,13 @@ unzip -q "$TMP_DIR/installer.zip" -d "$TMP_DIR"
 mkdir -p "$INSTALL_DIR"
 
 # Move binary to install directory
-mv "$TMP_DIR/databricks-connect-installer" "$INSTALL_DIR/"
-chmod +x "$INSTALL_DIR/databricks-connect-installer"
+mv "$TMP_DIR/${BINARY_NAME}" "$INSTALL_DIR/"
+chmod +x "$INSTALL_DIR/${BINARY_NAME}"
 
 echo "${GREEN}✅ Successfully installed Databricks Connect Installer!${NC}"
 echo
 echo "To use the installer, run:"
-echo "  ${BLUE}databricks-connect-installer${NC}"
+echo "  ${BLUE}${BINARY_NAME}${NC}"
 echo
 echo "Make sure ${BLUE}$INSTALL_DIR${NC} is in your PATH."
 
