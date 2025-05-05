@@ -25,4 +25,4 @@
   (b/uber {:class-dir class-dir
            :uber-file uber-file
            :basis basis
-           :main 'wanishing.databricks-connect-installer.core})) 
+           :main 'wanishing.databricks-connect-installer.core}))
